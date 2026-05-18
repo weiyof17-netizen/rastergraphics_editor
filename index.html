@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Редактор векторной графики</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="kicker">Учебная практика</p>
+          <h1>Редактор векторной графики</h1>
+        </div>
+        <div class="topbar__actions" aria-label="Основные действия">
+          <button class="icon-button" id="undoButton" title="Отменить действие" aria-label="Отменить действие">↶</button>
+          <button class="icon-button" id="redoButton" title="Повторить действие" aria-label="Повторить действие">↷</button>
+          <button class="text-button" id="saveJsonButton">Сохранить JSON</button>
+          <label class="text-button file-button">
+            Открыть JSON
+            <input id="openJsonInput" type="file" accept="application/json">
+          </label>
+          <button class="text-button" id="exportSvgButton">SVG</button>
+          <button class="text-button" id="exportPngButton">PNG</button>
+        </div>
+      </header>
+
+      <section class="workspace" aria-label="Рабочая область редактора">
+        <aside class="panel tools-panel" aria-label="Инструменты">
+          <h2>Инструменты</h2>
+          <div class="tool-grid" role="group" aria-label="Выбор инструмента">
+            <button class="tool-button is-active" data-tool="select" title="Выделение" aria-label="Выделение">↖</button>
+            <button class="tool-button" data-tool="rect" title="Прямоугольник" aria-label="Прямоугольник">□</button>
+            <button class="tool-button" data-tool="ellipse" title="Эллипс" aria-label="Эллипс">○</button>
+            <button class="tool-button" data-tool="line" title="Линия" aria-label="Линия">╱</button>
+            <button class="tool-button" data-tool="path" title="Свободная линия" aria-label="Свободная линия">⌁</button>
+            <button class="tool-button" data-tool="text" title="Текст" aria-label="Текст">T</button>
+          </div>
+
+          <div class="control-group">
+            <label for="fillColor">Заливка</label>
+            <input id="fillColor" type="color" value="#f2b84b">
+          </div>
+          <div class="control-group">
+            <label for="strokeColor">Контур</label>
+            <input id="strokeColor" type="color" value="#143642">
+          </div>
+          <div class="control-group">
+            <label for="strokeWidth">Толщина</label>
+            <input id="strokeWidth" type="range" min="0" max="18" value="3">
+            <output id="strokeWidthValue">3</output>
+          </div>
+          <div class="control-group">
+            <label for="opacityRange">Прозрачность</label>
+            <input id="opacityRange" type="range" min="10" max="100" value="100">
+            <output id="opacityValue">100%</output>
+          </div>
+          <div class="control-group">
+            <label for="textValue">Текст</label>
+            <input id="textValue" type="text" value="Новый текст" maxlength="80">
+          </div>
+          <label class="switch-control">
+            <input id="gridToggle" type="checkbox" checked>
+            <span>Сетка</span>
+          </label>
+        </aside>
+
+        <section class="canvas-stage" aria-label="Холст">
+          <div class="stage-header">
+            <div>
+              <strong>Холст 1000 × 650</strong>
+              <span id="statusText">Готов к работе</span>
+            </div>
+            <div class="stage-header__buttons">
+              <button class="text-button" id="duplicateButton">Дублировать</button>
+              <button class="text-button" id="frontButton">Выше</button>
+              <button class="text-button" id="backButton">Ниже</button>
+              <button class="danger-button" id="deleteButton">Удалить</button>
+              <button class="danger-button" id="clearButton">Очистить</button>
+            </div>
+          </div>
+          <div class="canvas-wrap">
+            <svg id="canvas" viewBox="0 0 1000 650" role="img" aria-label="Векторный холст">
+              <defs>
+                <pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#d8ddd9" stroke-width="1"></path>
+                </pattern>
+                <pattern id="largeGrid" width="100" height="100" patternUnits="userSpaceOnUse">
+                  <rect width="100" height="100" fill="url(#smallGrid)"></rect>
+                  <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#b8c0bc" stroke-width="1.5"></path>
+                </pattern>
+              </defs>
+              <rect id="gridLayer" width="1000" height="650" fill="url(#largeGrid)"></rect>
+              <g id="drawingLayer"></g>
+              <g id="selectionLayer"></g>
+            </svg>
+          </div>
+        </section>
+
+        <aside class="panel inspector-panel" aria-label="Свойства">
+          <h2>Свойства</h2>
+          <p class="hint" id="selectionHint">Объект не выбран</p>
+          <div class="numeric-grid">
+            <label>
+              X
+              <input id="propX" type="number" step="1">
+            </label>
+            <label>
+              Y
+              <input id="propY" type="number" step="1">
+            </label>
+            <label>
+              Ширина
+              <input id="propWidth" type="number" min="1" step="1">
+            </label>
+            <label>
+              Высота
+              <input id="propHeight" type="number" min="1" step="1">
+            </label>
+          </div>
+          <h2>Слои</h2>
+          <div class="layer-list" id="layerList" aria-label="Список объектов"></div>
+        </aside>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
